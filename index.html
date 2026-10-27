@@ -37,44 +37,39 @@
   }
   nav a:hover { color: #0096c7; border-color: #0096c7; }
 
-  /* ===== Hero: flowing pool gradient + bubbles ===== */
+  /* ===== Hero: photo background + blue overlay + bubbles ===== */
   header {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    text-align: center; padding: 20px;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(-45deg, #0077b6, #00b4d8, #48cae4, #90e0ef);
-    background-size: 400% 400%;
-    animation: gradientFlow 12s ease infinite;
-  }
-  @keyframes gradientFlow {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  header h1 { font-size: 3em; margin-bottom: 12px; position: relative; z-index: 1; text-shadow: 0 2px 12px rgba(0,60,90,.25); }
-  header p  { font-size: 1.2em; opacity: .95; margin-bottom: 30px; position: relative; z-index: 1; }
-  header .btn { position: relative; z-index: 1; }
-  #particles {
-    position: absolute; inset: 0;
-    pointer-events: none;
-  }
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 20px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  background: url('pool.jpg') center/cover no-repeat;
+}
+header h1 { font-size: 3em; margin-bottom: 12px; position: relative; z-index: 2; text-shadow: 0 2px 10px rgba(0,40,70,.5); }
+header p  { font-size: 1.2em; margin-bottom: 30px; position: relative; z-index: 2; text-shadow: 0 1px 8px rgba(0,40,70,.5); }
+header .btn { position: relative; z-index: 2; }
+#particles {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
 
   /* ===== Button ===== */
   .btn {
     display: inline-block;
     padding: 12px 36px;
-    background: rgba(255,255,255,.9); color: #0077b6;
+    background: rgba(255,255,255,.92); color: #0077b6;
     border-radius: 50px; font-weight: bold;
     text-decoration: none;
     transition: transform .2s, box-shadow .2s, background .2s, color .2s;
   }
   .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,.2);
     background: #ffb703; color: #fff;
   }
 
@@ -125,28 +120,6 @@
   #contact a { color: #0077b6; font-size: 1.1em; }
   #contact a:hover { color: #ffb703; }
 
-  /* ===== Summer banner image ===== */
-  #gallery { padding: 0; max-width: 1100px; }
-  .banner {
-    position: relative;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 16px 40px rgba(0,90,130,.25);
-  }
-  .banner img {
-    width: 100%;
-    display: block;
-    transform: scale(1.02);
-    transition: transform .8s ease;
-  }
-  .banner:hover img { transform: scale(1.06); }
-  .banner .caption {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    padding: 30px;
-    background: linear-gradient(transparent, rgba(0,60,90,.55));
-    color: #fff; font-size: 1.1em; font-weight: 500;
-  }
-
   /* ===== Fade-in animation ===== */
   .fade {
     opacity: 0; transform: translateY(30px);
@@ -181,14 +154,14 @@
 <section id="about" class="fade">
   <h2>About Me</h2>
   <p style="text-align:center; max-width:600px; margin:0 auto; color:#5a8ba3;">
-    A student of Industrial Design at South China University of Technology, 
-    dedicated to stepping into the dream realm of product management.
+   I am an Industrial Design student at South China University of Technology, 
+   dedicated to entering the realm of product management.
   </p >
   <div class="tags" style="margin-top:36px;">
-    <span class="tag">HTML/CSS</span>
-    <span class="tag">JavaScript</span>
-    <span class="tag">Python</span>
-    <span class="tag">Your Skill</span>
+    <span class="tag">Professional skills</span>
+    <span class="tag">interpersonal communication</span>
+    <span class="tag">Internship experience</span>
+    <span class="tag">‌Constant effort‌</span>
   </div>
 </section>
 
@@ -213,13 +186,6 @@
       <p>A little canvas toy that simulates gentle ocean waves.</p >
       <a href="#">View Project →</a >
     </div>
-  </div>
-</section>
-
-<section id="gallery" class="fade">
-  <div class="banner">
-    < img src="pool.jpg" alt="Summer pool with flowers">
-    <div class="caption">Summer, captured 🌼</div>
   </div>
 </section>
 
@@ -248,6 +214,7 @@
   document.querySelectorAll('.fade').forEach(el => observer.observe(el));
 
   // ===== Bubble particles =====
+   // ===== Bubble particles =====
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
   let particles = [];
@@ -255,6 +222,11 @@
   function resize() {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
+    // 尺寸变化后重新分布气泡，避免挤在角落
+    particles.forEach(p => {
+      p.x = Math.random() * canvas.width;
+      p.y = Math.random() * canvas.height;
+    });
   }
   resize();
   window.addEventListener('resize', resize);
@@ -270,15 +242,17 @@
   });
 
   class Bubble {
-    constructor() { this.reset(); }
-    reset() {
+    constructor() { this.reset(true); }
+    reset(anywhere) {
       this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
+      // 新气泡从底部或随机位置出现
+      this.y = anywhere ? Math.random() * canvas.height : canvas.height + 10;
       this.vx = (Math.random() - .5) * .4;
-      this.vy = (Math.random() - .5) * .4;
+      this.vy = -(Math.random() * .5 + .25);   // 一直缓缓向上飘
       this.r = Math.random() * 4 + 2;
     }
     step() {
+      // 鼠标轻轻推开附近的气泡
       if (mouse.x !== null) {
         const dx = this.x - mouse.x, dy = this.y - mouse.y;
         const d = Math.hypot(dx, dy);
@@ -290,18 +264,17 @@
       this.x += this.vx; this.y += this.vy;
       if (this.x < -10) this.x = canvas.width + 10;
       if (this.x > canvas.width + 10) this.x = -10;
-      if (this.y < -10) this.y = canvas.height + 10;
-      if (this.y > canvas.height + 10) this.y = -10;
+      if (this.y < -10) this.reset(false);   // 飘出顶部后从底部重新出现
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,.3)';
+      ctx.fillStyle = 'rgba(255,255,255,.35)';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,.45)';
+      ctx.strokeStyle = 'rgba(255,255,255,.5)';
       ctx.lineWidth = 1;
       ctx.stroke();
     }
   }
-  for (let i = 0; i < 40; i++) particles.push(new Bubble());
+  for (let i = 0; i < 55; i++) particles.push(new Bubble());
 
   (function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
