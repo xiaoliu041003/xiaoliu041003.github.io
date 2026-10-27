@@ -1,31 +1,314 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的主页</title>
-  <style>
-    body {
-      font-family: -apple-system, "PingFang SC", sans-serif;
-      max-width: 700px;
-      margin: 80px auto;
-      padding: 0 20px;
-      color: #333;
-      line-height: 1.8;
-    }
-    h1 { color: #1a1a2e; }
-    a { color: #0366d6; text-decoration: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>xxx | Personal Homepage</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Segoe UI", sans-serif;
+    color: #16425b;
+    background: #f0fafd;
+    line-height: 1.8;
+  }
+
+  /* ===== Navbar ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 8px rgba(0,150,199,.12);
+    z-index: 100;
+  }
+  nav ul {
+    max-width: 900px; margin: 0 auto;
+    display: flex; list-style: none;
+    padding: 0 20px;
+  }
+  nav li { margin-right: 30px; }
+  nav a {
+    display: block; padding: 16px 4px;
+    text-decoration: none; color: #4a7a94; font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: #0096c7; border-color: #0096c7; }
+
+  /* ===== Hero: flowing pool gradient + bubbles ===== */
+  header {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 20px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #0077b6, #00b4d8, #48cae4, #90e0ef);
+    background-size: 400% 400%;
+    animation: gradientFlow 12s ease infinite;
+  }
+  @keyframes gradientFlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  header h1 { font-size: 3em; margin-bottom: 12px; position: relative; z-index: 1; text-shadow: 0 2px 12px rgba(0,60,90,.25); }
+  header p  { font-size: 1.2em; opacity: .95; margin-bottom: 30px; position: relative; z-index: 1; }
+  header .btn { position: relative; z-index: 1; }
+  #particles {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+
+  /* ===== Button ===== */
+  .btn {
+    display: inline-block;
+    padding: 12px 36px;
+    background: rgba(255,255,255,.9); color: #0077b6;
+    border-radius: 50px; font-weight: bold;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s, background .2s, color .2s;
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+    background: #ffb703; color: #fff;
+  }
+
+  /* ===== Sections ===== */
+  section {
+    max-width: 900px; margin: 0 auto;
+    padding: 90px 20px;
+  }
+  section h2 {
+    font-size: 2em; margin-bottom: 40px;
+    text-align: center; color: #0a3d56;
+  }
+  section h2::after {
+    content: "";
+    display: block; width: 50px; height: 4px;
+    background: #00b4d8; border-radius: 2px;
+    margin: 12px auto 0;
+  }
+
+  /* ===== Work cards ===== */
+  .works {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: #fff; border-radius: 16px;
+    padding: 28px; box-shadow: 0 2px 12px rgba(0,150,199,.1);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,150,199,.2); }
+  .card .emoji { font-size: 2.4em; }
+  .card h3 { margin: 12px 0 8px; color: #0a3d56; }
+  .card p { color: #5a8ba3; font-size: .95em; margin-bottom: 14px; }
+  .card a { color: #0077b6; font-weight: 600; text-decoration: none; }
+  .card a:hover { text-decoration: underline; color: #ffb703; }
+
+  /* ===== Skill tags ===== */
+  .tags { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .tag {
+    background: #dcf5fc; color: #0077b6;
+    padding: 8px 20px; border-radius: 30px;
+    font-weight: 500; font-size: .95em;
+  }
+
+  /* ===== Contact ===== */
+  #contact { text-align: center; }
+  #contact a { color: #0077b6; font-size: 1.1em; }
+  #contact a:hover { color: #ffb703; }
+
+  /* ===== Summer banner image ===== */
+  #gallery { padding: 0; max-width: 1100px; }
+  .banner {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0,90,130,.25);
+  }
+  .banner img {
+    width: 100%;
+    display: block;
+    transform: scale(1.02);
+    transition: transform .8s ease;
+  }
+  .banner:hover img { transform: scale(1.06); }
+  .banner .caption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 30px;
+    background: linear-gradient(transparent, rgba(0,60,90,.55));
+    color: #fff; font-size: 1.1em; font-weight: 500;
+  }
+
+  /* ===== Fade-in animation ===== */
+  .fade {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .fade.show { opacity: 1; transform: translateY(0); }
+
+  footer {
+    text-align: center; padding: 30px;
+    color: #7fb3c8; font-size: .9em;
+  }
+</style>
 </head>
 <body>
-  <h1> Hello, I'm Liu Zhiyi.👋</h1>
-  <p>Welcome to my Personal Site & Portfolio</p >
-  <h2>Portfolio</h2>
+
+<nav>
   <ul>
-    <li>Project 1：<a href=" ">project link</a ></li>
-    <li>Project 2：<a href="#">project link</a ></li>
+    <li><a href=" ">Home</a ></li>
+    <li><a href="#about">About</a ></li>
+    <li><a href="#works">Works</a ></li>
+    <li><a href="#contact">Contact</a ></li>
   </ul>
-  <h2>Contact me</h2>
-  <p>Email：1123655772@qq.com</p >
+</nav>
+
+<header id="home">
+  <canvas id="particles"></canvas>
+  <h1>Hi, I'm Liu Zhiyi 🏖️</h1>
+  <p>As refreshing as a glass of summer soda 🍹</p >
+  <a class="btn" href="#works">Dive into my works →</a >
+</header>
+
+<section id="about" class="fade">
+  <h2>About Me</h2>
+  <p style="text-align:center; max-width:600px; margin:0 auto; color:#5a8ba3;">
+    A student of Industrial Design at South China University of Technology, 
+    dedicated to stepping into the dream realm of product management.
+  </p >
+  <div class="tags" style="margin-top:36px;">
+    <span class="tag">HTML/CSS</span>
+    <span class="tag">JavaScript</span>
+    <span class="tag">Python</span>
+    <span class="tag">Your Skill</span>
+  </div>
+</section>
+
+<section id="works" class="fade">
+  <h2>Works</h2>
+  <div class="works">
+    <div class="card">
+      <div class="emoji">🏄</div>
+      <h3>Surf Spot Map</h3>
+      <p>An interactive map for logging your favorite surf spots.</p >
+      <a href="#">View Project →</a >
+    </div>
+    <div class="card">
+      <div class="emoji">🍧</div>
+      <h3>Summer Ice Shop</h3>
+      <p>A showcase page for an ice dessert shop with an order form.</p >
+      <a href="#">View Project →</a >
+    </div>
+    <div class="card">
+      <div class="emoji">🌊</div>
+      <h3>Wave Simulator</h3>
+      <p>A little canvas toy that simulates gentle ocean waves.</p >
+      <a href="#">View Project →</a >
+    </div>
+  </div>
+</section>
+
+<section id="gallery" class="fade">
+  <div class="banner">
+    < img src="pool.jpg" alt="Summer pool with flowers">
+    <div class="caption">Summer, captured 🌼</div>
+  </div>
+</section>
+
+<section id="contact" class="fade">
+  <h2>Contact</h2>
+  <p>Feel free to reach out — let's make something cool 😊</p >
+  <p style="margin-top:10px;">
+    📧 <a href="mailto:your@email.com">1123655772@qq.com</a >
+  </p >
+  <p style="margin-top:6px;">
+    💻 <a href="https://github.com/your_username">github.com/xiaoliu041003</a >
+  </p >
+</section>
+
+<footer>
+  © 2026 xxx · Powered by GitHub Pages 🏝️
+</footer>
+
+<script>
+  // ===== Scroll fade-in =====
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('show');
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade').forEach(el => observer.observe(el));
+
+  // ===== Bubble particles =====
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const mouse = { x: null, y: null };
+  canvas.parentElement.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+  canvas.parentElement.addEventListener('mouseleave', () => {
+    mouse.x = mouse.y = null;
+  });
+
+  class Bubble {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() - .5) * .4;
+      this.vy = (Math.random() - .5) * .4;
+      this.r = Math.random() * 4 + 2;
+    }
+    step() {
+      if (mouse.x !== null) {
+        const dx = this.x - mouse.x, dy = this.y - mouse.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 130 && d > 0) {
+          this.x += (dx / d) * 1.5;
+          this.y += (dy / d) * 1.5;
+        }
+      }
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < -10) this.x = canvas.width + 10;
+      if (this.x > canvas.width + 10) this.x = -10;
+      if (this.y < -10) this.y = canvas.height + 10;
+      if (this.y > canvas.height + 10) this.y = -10;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.3)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.45)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  for (let i = 0; i < 40; i++) particles.push(new Bubble());
+
+  (function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => p.step());
+    requestAnimationFrame(loop);
+  })();
+</script>
+
 </body>
 </html>
